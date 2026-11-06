@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验一 · 星云搜索 | 注意力糖果工坊</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  #stage { height: min(72vh, 640px); min-height: 420px; position: relative; }
+  #stage canvas { display: block; border-radius: 0 0 var(--r-lg) var(--r-lg); }
+  /* 持久的"目标提示"徽章（仅提示轮显示），里面是真实目标照片 */
+  #cue-badge {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    z-index: 10; display: none; align-items: center; gap: 10px;
+    background: var(--coral); border: 3px solid var(--ink); border-radius: 999px;
+    padding: 4px 18px 4px 6px; font-weight: 900; font-size: 14px;
+    box-shadow: var(--shadow-pop);
+  }
+  #cue-badge img {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #fff; border: 2.5px solid var(--ink);
+  }
+  /* 摄像头小窗：固定在右下角，不遮挡舞台（webgazer 会写内联样式，用 !important 压住） */
+  #webgazerVideoFeed {
+    position: fixed !important;
+    pointer-events: none !important; left: auto !important; top: auto !important;
+    right: 14px !important; bottom: 14px !important;
+    width: 148px !important; height: auto !important; z-index: 60 !important;
+    border: 3px solid var(--ink); border-radius: 14px;
+    box-shadow: 4px 4px 0 rgba(86,62,121,.25);
+  }
+  /* 注视点 */
+  #fixation {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    z-index: 5; font-family: var(--font-disp); font-size: 54px; color: var(--ink);
+    pointer-events: none;
+  }
+  /* 底部作答按钮（给没有键盘的人） */
+  .answer-pad { display: flex; gap: 18px; justify-content: center; margin-top: 18px; }
+  .answer-pad .btn { min-width: 200px; }
+  @media (max-width: 700px) { .answer-pad .btn { min-width: 0; flex: 1; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px">
+    <h1 class="k-title" id="page-title" style="font-size:clamp(26px,4vw,40px)">实验一 · 星云搜索</h1>
+    <span class="sticker" style="transform:rotate(2deg)">🍩 找到红色甜甜圈</span>
+  </div>
+
+  <div class="progress-track" style="margin-bottom:18px"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+  <div class="stage-shell">
+    <div id="stage"></div>
+    <div class="stage-hud">
+      <span class="hud-pill" id="hud-trial">准备中…</span>
+      <span class="hud-pill" id="hud-block">—</span>
+    </div>
+    <div id="cue-badge"></div>
+    <div id="fixation">＋</div>
+    <div class="feedback-flash" id="feedback"><div class="fb-card">
+      <div class="fb-icon"></div><div class="fb-title"></div><div class="fb-sub"></div>
+    </div></div>
+
+    <!-- 覆盖层：指导语 / 休息 / 结束，由 JS 填充 -->
+    <div class="overlay" id="overlay"><div class="card" id="overlay-card"></div></div>
+  </div>
+
+  <div class="answer-pad">
+    <button class="btn btn-mint" id="btn-yes"><kbd>F</kbd> 有甜甜圈</button>
+    <button class="btn btn-pink" id="btn-no"><kbd>J</kbd> 没有</button>
+  </div>
+  <p style="text-align:center; color:var(--ink-soft); font-size:14px; margin-top:10px">键盘党按 F / J，手机或平板点上面两个按钮</p>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/gaze.js"></script>
+<script src="js/exp1.js"></script>
+</body>
+</html>
