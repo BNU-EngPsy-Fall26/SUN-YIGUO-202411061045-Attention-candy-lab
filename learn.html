@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验讲解 · 注意力糖果工坊</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .exp-section {
+    border: 3px solid var(--ink); border-radius: var(--r-lg);
+    overflow: hidden; margin-top: 34px; box-shadow: var(--shadow-pop);
+    background: var(--card);
+  }
+  .exp-head {
+    padding: 26px 34px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+    border-bottom: 3px solid var(--ink);
+  }
+  .exp-head h2 { font-size: 26px; margin: 0; }
+  .exp-head .cite { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+  .exp-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .exp-body > div { padding: 26px 34px; }
+  .exp-body > div:first-child { border-right: 3px dashed var(--ink-faint); }
+  .panel-tag {
+    display: inline-block; padding: 3px 14px; border-radius: 999px;
+    border: 2.5px solid var(--ink); font-size: 13px; font-weight: 900; margin-bottom: 12px;
+    background: var(--card);
+  }
+  .exp-body p { font-size: 15px; line-height: 1.9; margin: 0 0 10px; }
+  .exp-body p:last-child { margin-bottom: 0; }
+  .theory-chip {
+    display: inline-block; border: 2px solid var(--ink); border-radius: 8px;
+    padding: 1px 9px; font-size: 12.5px; font-weight: 900; background: #fff; margin: 0 2px;
+  }
+  @media (max-width: 760px) {
+    .exp-body { grid-template-columns: 1fr; }
+    .exp-body > div:first-child { border-right: none; border-bottom: 3px dashed var(--ink-faint); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:8px">
+    <h1 class="k-title" id="page-title" style="font-size:clamp(28px,4.5vw,44px)">实验讲解</h1>
+    <span class="sticker">🧪 做完实验再读，风味更佳</span>
+  </div>
+  <p style="color:var(--ink-soft); font-weight:600; max-width:720px">
+    这两个小实验各自复现了一篇心理学经典论文，又各自加了一个我们自己的特别设计。
+    为了避免提前"剧透"影响你的判断，建议<b>先完成实验</b>，再回这里对答案：
+    你的表现和 40 多年前的经典发现一致吗？
+  </p>
+
+  <!-- ================= 实验一 ================= -->
+  <section class="exp-section">
+    <div class="exp-head" style="background:var(--mint)">
+      <span style="font-size:34px">🍩</span>
+      <h2>实验一 · 星云搜索</h2>
+      <span class="cite">复现 Treisman &amp; Gelade (1980)，<i>Cognitive Psychology</i></span>
+    </div>
+    <div class="exp-body">
+      <div>
+        <span class="panel-tag">它在测什么</span>
+        <p>找一颗「不同颜色的甜甜圈」时，它仿佛自己<b>跳出来</b>，周围糖果再多也不拖慢你；但找「红色 + 甜甜圈」这个组合时，糖果越多你越慢，差不多每多一颗就慢一小段。</p>
+        <p>这就是<span class="theory-chip">特征整合理论 FIT</span>：单一特征可以被视觉系统<b>同时处理整个画面</b>（并行加工）；而特征的组合必须让注意<b>逐个检查</b>（序列加工）。所以实验用「反应时随糖果数量增长的斜率」来区分这两种加工。</p>
+      </div>
+      <div>
+        <span class="panel-tag">我们的特别设计</span>
+        <p>第三轮里，我们在搜索开始前和进行中<b>给你看目标的真实照片</b>。</p>
+        <p>按<span class="theory-chip">引导搜索模型</span>，提前知道目标的特征，注意就能优先投向带这种特征的糖果，需要逐个检查的对象变少——所以提示应该让联合搜索的<b>斜率</b>降下来（本设计里一半糖果是薄荷绿、能被颜色通道直接筛掉，理想降幅约一半），而特征搜索本来就接近并行、不受影响。</p>
+        <p>为什么看斜率而不是总反应时？因为总反应时里还混着按键速度、任务熟悉度等与搜索无关的成分；「每多一颗糖果多花多少时间」才是搜索效率的直接指标。结果是不是这样？去结果大屏看看。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 实验二 ================= -->
+  <section class="exp-section">
+    <div class="exp-head" style="background:var(--lavender)">
+      <span style="font-size:34px">🎨</span>
+      <h2>实验二 · 比例眼力</h2>
+      <span class="cite">复现 Cleveland &amp; McGill (1984)，<i>JASA</i></span>
+    </div>
+    <div class="exp-body">
+      <div>
+        <span class="panel-tag">它在测什么</span>
+        <p>同一个比例，画成位置、长度、角度、面积四种图形，你估得一样准吗？Cleveland &amp; McGill 发现人眼读数的准确度有稳定的排序：<b>位置 &gt; 长度 &gt; 角度 &gt; 面积</b>。</p>
+        <p>这条排序后来成了图表设计的基本守则：重要的数值，优先用位置和长度来呈现，少用饼图和气泡。</p>
+      </div>
+      <div>
+        <span class="panel-tag">我们的特别设计</span>
+        <p>一半题目你拖滑块<b>报数字</b>，另一半你直接<b>拖动图形</b>"画"出答案。</p>
+        <p>按<span class="theory-chip">兼容性原理</span>，用图形回答图形的问题，省掉了"把感觉翻译成数字"这一步转换，误差应该更小；而且数字作答还容易<b>就近取整</b>（答案爱落在 5 的倍数上）——这本身也是一种误差。真的如此吗？结果大屏里专门有一张"取整"分布在等你。</p>
+      </div>
+    </div>
+  </section>
+
+  <p style="margin-top:36px; text-align:center; display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
+    <a class="btn btn-coral" href="exp1.html">🍩 去做实验一</a>
+    <a class="btn btn-lav" href="exp2.html">🎨 去做实验二</a>
+    <a class="btn btn-mint" href="results.html">📈 看结果大屏</a>
+  </p>
+</div>
+
+<script src="js/common.js"></script>
+<script>
+  Lab.renderNav('learn');
+  Lab.kineticTitle(document.getElementById('page-title'));
+</script>
+</body>
+</html>

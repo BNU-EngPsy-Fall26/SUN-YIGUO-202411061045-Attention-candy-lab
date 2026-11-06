@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>结果大屏 · 注意力糖果工坊</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .chart-card { margin-bottom: 28px; }
+  .chart-card h2 { font-size: 22px; margin-bottom: 4px; }
+  .chart-card .sub { color: var(--ink-soft); font-size: 14.5px; margin-bottom: 12px; }
+  .chart { width: 100%; height: 380px; }
+  .chart-tall { width: 100%; height: 300px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-box {
+    border: 3px solid var(--ink); border-radius: var(--r-md); padding: 16px;
+    text-align: center; box-shadow: var(--shadow-pop);
+  }
+  .stat-box .num { font-family: var(--font-disp); font-size: 34px; line-height: 1.1; }
+  .stat-box .lab { font-size: 13.5px; font-weight: 800; color: var(--ink-soft); margin-top: 4px; }
+  /* 结论框：易懂、无比喻 */
+  .conclusion {
+    border: 3px solid var(--ink);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    margin-top: 14px;
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+  .conclusion b.tagline {
+    display: inline-block; padding: 2px 12px; border-radius: 999px;
+    border: 2.5px solid var(--ink); font-size: 13px; margin-bottom: 8px;
+  }
+  .conclusion.rep { background: var(--mint); }
+  .conclusion.rep .tagline { background: var(--card); }
+  .conclusion.imp { background: var(--lavender); }
+  .conclusion.imp .tagline { background: var(--card); }
+  .conclusion.wait { background: var(--paper-2); border-style: dashed; border-color: var(--ink-faint); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  /* 效应量卡片 */
+  .eff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .eff-grid.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px) { .eff-grid.g2 { grid-template-columns: 1fr; } }
+  .eff-box { border: 3px solid var(--ink); border-radius: var(--r-md); padding: 16px 18px; box-shadow: var(--shadow-pop); font-size: 14.5px; line-height: 1.75; }
+  .eff-box .eff-name { font-weight: 900; font-size: 15px; display: block; margin-bottom: 6px; }
+  .eff-box .eff-val { font-family: var(--font-disp); font-size: 27px; display: block; margin: 2px 0; }
+  .eff-note { color: var(--ink-soft); font-size: 13.5px; margin-top: 12px; }
+  /* 注视热图 */
+  .gaze-map {
+    width: 100%; aspect-ratio: 16 / 10; border: 3px solid var(--ink);
+    border-radius: var(--r-md); background: #FDF3EA; box-shadow: var(--shadow-pop);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:8px">
+    <h1 class="k-title" id="page-title" style="font-size:clamp(28px,4.5vw,44px)">结果大屏</h1>
+    <span class="sticker">📈 实时汇总 · 自动更新</span>
+  </div>
+  <p style="color:var(--ink-soft); font-weight:600; margin-bottom:22px">
+    这里分析的是<b>本项目收集到的所有被试</b>的数据：每有一位新被试完成实验，结果就会自动纳入下面的统计与图表。
+  </p>
+
+  <div class="stat-grid" id="stat-grid"></div>
+  <div id="msg-box"></div>
+
+  <!-- ================= 实验一 ================= -->
+  <div class="card chart-card">
+    <h2>🍩 实验一 · 搜索斜率：反应时 × 集合大小</h2>
+    <p class="sub">每个点 = 该条件下所有被试的平均反应时（先算每人均值，再取平均）。虚线 = 收数前写下的理论预测。</p>
+    <div class="chart" id="chart-search"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card chart-card">
+      <h2>📚 与原文对比：搜索斜率</h2>
+      <p class="sub">Treisman &amp; Gelade (1980) 报告的经典量级：特征搜索接近 0（并行加工），联合搜索约 20–30 ms/项（序列加工）。</p>
+      <div class="chart-tall chart" id="chart-search-vs"></div>
+    </div>
+    <div class="card chart-card">
+      <h2>📍 你的位置：联合搜索斜率</h2>
+      <p class="sub">每个圆点 = 一名被试的联合搜索斜率。粉色大点是你。</p>
+      <div class="chart-tall chart" id="chart-you-search"></div>
+    </div>
+  </div>
+
+  <div id="concl-search"></div>
+
+  <!-- 实验一 · 效应量 -->
+  <div class="card chart-card">
+    <h2>📏 实验一 · 效应量计算</h2>
+    <p class="sub">对应原文报告的核心效应：联合搜索比特征搜索慢多少（斜率差），以及我们的提示条件能追回多少。效应量按每名被试的斜率做配对计算。</p>
+    <div id="effect-search"></div>
+  </div>
+
+  <!-- ================= 实验二 ================= -->
+  <div class="card chart-card">
+    <h2>🎨 实验二 · 四种编码的判断误差 × 两种作答方式</h2>
+    <p class="sub">柱子越矮 = 估得越准。数字作答（粉）与图形作答（蓝）分开显示。</p>
+    <div class="chart" id="chart-cm"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card chart-card">
+      <h2>📚 与原文对比：编码精度排名</h2>
+      <p class="sub">Cleveland &amp; McGill (1984) 的排名：位置 &gt; 长度 &gt; 角度 &gt; 面积。连线图对比本研究的实际排名。</p>
+      <div class="chart-tall chart" id="chart-cm-vs"></div>
+    </div>
+    <div class="card chart-card">
+      <h2>📍 你的位置：平均误差</h2>
+      <p class="sub">每个圆点 = 一名被试的平均判断误差。粉色大点是你。</p>
+      <div class="chart-tall chart" id="chart-you-cm"></div>
+    </div>
+  </div>
+
+  <div id="concl-cm"></div>
+
+  <!-- 实验二 · 效应量 -->
+  <div class="card chart-card">
+    <h2>📏 实验二 · 效应量计算</h2>
+    <p class="sub">对应原文报告的核心效应：四种编码的误差比（以位置为 1），以及图形作答相比数字作答的获益。效应量按每名被试的平均误差做配对计算。</p>
+    <div id="effect-cm"></div>
+  </div>
+
+  <!-- ================= 数字偏好 ================= -->
+  <div class="card chart-card">
+    <h2>🔢 数字偏好检验：答案有多"圆"？</h2>
+    <p class="sub">用数字报告比例时，人们的答案倾向于落在 5 或 10 的倍数上（取整偏差）。图形作答不经过数字，分布应更平滑。</p>
+    <div class="chart" id="chart-round"></div>
+  </div>
+  <div id="concl-round"></div>
+
+  <!-- ================= 注视轨迹（眼动/鼠标） ================= -->
+  <div class="card chart-card">
+    <h2>👁️ 你的注视轨迹</h2>
+    <p class="sub">实验一正式试次期间记录的注视点（或鼠标轨迹）叠加成的热图：越红 = 看得越久。左边是普通的联合搜索，右边是带目标提示的联合搜索。</p>
+    <div class="two-col" id="gaze-panels" style="display:none">
+      <div style="text-align:center">
+        <canvas class="gaze-map" id="gaze-base"></canvas>
+        <p style="font-weight:900; margin-top:8px; font-size:14.5px">联合搜索 · 无提示</p>
+      </div>
+      <div style="text-align:center">
+        <canvas class="gaze-map" id="gaze-cued"></canvas>
+        <p style="font-weight:900; margin-top:8px; font-size:14.5px">联合搜索 · 有提示</p>
+      </div>
+    </div>
+    <div id="concl-gaze"></div>
+  </div>
+</div>
+
+<script src="vendor/echarts.min.js"></script>
+<script src="vendor/simpleheat.js"></script>
+<script src="js/common.js"></script>
+<script src="js/gaze.js"></script>
+<script src="js/results.js"></script>
+</body>
+</html>
